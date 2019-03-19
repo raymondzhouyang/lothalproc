@@ -47,7 +47,6 @@ set(common_libs
     r2base
     opus
     fftw3f
-    pthread
     )
 endif()
 
@@ -98,10 +97,13 @@ else()
     )
 
 endif(HAVE_FLORA)
+
+message("### ")
 findPackage(speech REQUIRED
     HINTS ${externalPrefix}
     INC_PATH_SUFFIX ${speech_include_paths}
     LIB_PATH_SUFFIX ${lib_name} ${third_lib_name}
+    HEADERS ${speech_headers}
     SHARED_LIBS ${speech_libs}
     RPATH_LINK
     )
