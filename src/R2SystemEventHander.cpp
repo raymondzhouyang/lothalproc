@@ -150,7 +150,7 @@ int R2SystemEventHander::onEvent(R2Event &event) {
         } else {
         	if (isconnected_) {
         		isconnected_ = false;
-            	lothal_.setVoipStatus(isconnected_);
+            	lothal_.setVoipStatus(isconnected_, "");
         	}
         }
         return R2_EOK;

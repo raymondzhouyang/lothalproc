@@ -3,7 +3,7 @@
  * Lothal
  *
  * Created by Zhu Yongjian on 2019/3/7
- * Copyright © 2018 rokid. All rights reserved.
+ * Copyright ? 2018 rokid. All rights reserved.
  */
 /** \file R2Event.hpp
  * \brief 定义事件及声明事件处理接口
@@ -225,12 +225,24 @@ struct R2ConfigOption {
 #define R2_EVENT_DATA_OUT		"EVENT_DATA_OUT"
 
 /**
+ * \brief 该事件用于通知上传经AEC后数据，携带的数据信息为 \link R2PutDataInfo \endlink。
+ */
+#define R2_EVENT_DATA_AEC		"EVENT_DATA_AEC"
+
+/**
+ * \brief 该事件用于通知上传经BF后数据，携带的数据信息为 \link R2PutDataInfo \endlink。
+ */
+#define R2_EVENT_DATA_BF		"EVENT_DATA_BF"
+
+
+/**
  * \brief 该事件用于通知上传VOIP数据，携带的数据信息为 \link R2PutDataInfo \endlink。
  */
 #define R2_EVENT_DATA_VOIP		"EVENT_DATA_VOIP"
 
 /**
- * \brief 事件\link R2_EVENT_DATA_OUT \endlink 及 \link R2_EVENT_DATA_VOIP \endlink
+ * \brief 事件\link R2_EVENT_DATA_OUT \endlink ，\link R2_EVENT_DATA_AEC \endlink
+ * \link R2_EVENT_DATA_BF \endlink 及 \link R2_EVENT_DATA_VOIP \endlink
  * 信息，用于传递具体数据及长度。
  */
 struct R2PutDataInfo {

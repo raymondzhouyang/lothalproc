@@ -36,6 +36,10 @@ using namespace lothal;
 #define LOTHAL_CONFIG		"/system/workdir_asr_cn/lothal.ini"
 #define FLORA_URI		"unix:/var/run/flora.sock"
 
+#ifndef COMMIT
+#define COMMIT "unknow"
+#endif
+
 static struct option long_opts[] = {
 	{"help", no_argument, 0, 'h'},
 	{"version", no_argument, 0, 'v'},
@@ -98,6 +102,8 @@ int main(int argc, char* argv[]) {
 #ifdef HAVE_FLORA
 	string flora_uri = FLORA_URI;
 #endif
+
+    R2Log("BUILD: " __DATE__ ", commit:%s", COMMIT);
 
 	while (1) {
 		c = getopt_long(argc, argv, "c:T:p:hv", long_opts, &opt_index);

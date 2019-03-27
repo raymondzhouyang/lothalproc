@@ -22,7 +22,7 @@ R2ProcServer::~R2ProcServer(){
 }
 
 void R2ProcServer::haveNewConnetion() {
-	lothal_.setVoipStatus(true);
+	lothal_.setVoipStatus(true, "");
     return;
 }
 

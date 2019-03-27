@@ -3,7 +3,7 @@
  * Lothal
  *
  * Created by Zhu Yongjian on 2019/1/11
- * Copyright © 2018 rokid. All rights reserved.
+ * Copyright ? 2018 rokid. All rights reserved.
  */
 
 /** \file R2Lothal.hpp
@@ -275,9 +275,12 @@ public:
 	int getWordInfo(const std::string &content, std::string &word_info);
 
 	/** \fn int setVoipStatus(bool enable)
+	 * \brief 设置Voip的通话状态
+	 * \param[in] enable 使能/去使能通话
+	 * \param[in] source 通话数据来源，可选择AEC或BF后的数据
 	 * \deprecated
 	 */
-	int setVoipStatus(bool enable);
+	int setVoipStatus(bool enable, const std::string &source = R2_VOPI_SOURCE_AEC);
 
 	/** \fn int setPickUpStatus(bool enable)
 	 * \deprecated

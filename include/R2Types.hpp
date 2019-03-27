@@ -3,7 +3,7 @@
  * Lothal
  *
  * Created by Zhu Yongjian on 2019/3/7
- * Copyright © 2018 rokid. All rights reserved.
+ * Copyright ? 2018 rokid. All rights reserved.
  */
 
 /** \file R2Types.hpp
@@ -72,6 +72,14 @@ enum R2BitFormat {
 	R2_BIT_FORMAT_FLOAT32,
 	R2_BIT_FORMAT_NUM,
 };
+
+/**
+ * VOIP通话数据来源
+ */
+
+#define R2_VOPI_SOURCE_AEC "VOIP_SOURCE_AEC"
+#define R2_VOPI_SOURCE_BF "VOIP_SOURCE_BF"
+
 
 #if defined(__arm__) || defined(__aarch64__) || defined(__ANDROID__)
 #define R2_BASEPORT	30000

@@ -71,7 +71,12 @@ int LothalProc::run() {
 		ret = provider_->readBlock(data, data_size);
 		if (ret) {
 			R2Error("Failed to read block, ret: %d", ret);
-			break;
+			#ifdef HAVE_VSP
+				//vspfeed or hw vad maybe in this mode
+				continue;
+			#else
+				break;
+			#endif
 		}
 
 		if (data && (data_size == block_size)) {
