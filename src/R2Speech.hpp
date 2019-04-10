@@ -39,6 +39,7 @@ public:
 
 	void setStack(const std::string &stack);
 	void setSkill(const std::string &skill);
+	void handle_pickup(int pick);
 
 private:
 	void speechLooper();
@@ -59,6 +60,7 @@ private:
 
 	std::string stack_;
 	std::string skill_opts_;
+	std::mutex  mutex_;
 };
 
 }

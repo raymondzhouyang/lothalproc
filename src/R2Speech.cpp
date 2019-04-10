@@ -9,6 +9,7 @@
 
 #include <string>
 #include <thread>
+#include <mutex>
 #include <sys/prctl.h>
 
 #include "speech/speech.h"
@@ -300,6 +301,17 @@ void R2Speech::setStack(const string &stack) {
 
 void R2Speech::setSkill(const string &skill) {
 	skill_opts_ = skill;
+}
+
+void R2Speech::handle_pickup(int pick) {
+	R2Info("handlePickup: %d", pick);
+
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (pick) {
+        lothal_.forceTrigger();
+    } else {
+        endVoice();
+    }
 }
 
 }

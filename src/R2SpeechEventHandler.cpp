@@ -133,7 +133,6 @@ int R2SpeechEventHandler::onSpeechEvent(R2Event &event) {
 		speech_.getValidFlag(), name.c_str());
 
 	if (name == R2_EVENT_VOICE_NLP) {
-		speech_.set_pickup(false);
 		speech_.endVoice();
 
 		/* 被标志为'无效'时，应避免向系统组上报
@@ -153,7 +152,6 @@ int R2SpeechEventHandler::onSpeechEvent(R2Event &event) {
 	} else if (name == R2_EVENT_ASR_END_RESULT) {
 		if (si->asr.length() > 0) {
 			/* 关闭拾音 */
-            speech_.set_pickup(false);
 			speech_.endVoice();
         }
 	} else if ((name == R2_EVENT_VOICE_ONESHOT) ||
@@ -164,7 +162,6 @@ int R2SpeechEventHandler::onSpeechEvent(R2Event &event) {
 		(name == R2_EVENT_VOICE_ERROR) ||
 		(name == R2_EVENT_VOICE_FAKE) ||
 		(name == R2_EVENT_VOICE_INVALID)) {
-		speech_.set_pickup(false);
 		/* 云端返回无效、拒绝或其他错误时，应该忽略
 		 * 后面的NLP事件。
 		 */
@@ -173,7 +170,6 @@ int R2SpeechEventHandler::onSpeechEvent(R2Event &event) {
 		/* 当撤销当前语音后，也应该忽略后面的NLP事件，同时
 		 * 系统组不关心该事件，不需要通知系统组。
 		 */
-		speech_.set_pickup(false);
 		speech_.setValidFlag(false);
 		return R2_EOK;
 	} else if (name == R2_EVENT_VOICE_CLOUD_START) {
@@ -227,6 +223,7 @@ int R2SpeechEventHandler::onVoiceEvent(R2Event &event) {
 		(name == R2_EVENT_VAD_END)) {
 		speech_id = speech_.voiceID();
 	} else if (name == R2_EVENT_VOICE_LOCAL_START) {
+		speech_.setValidFlag(true);
 		speech_id = speech_.startVoice(vi);
 	} else {
 		R2Error("Unknown voice event %s", name.c_str());

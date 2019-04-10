@@ -21,7 +21,7 @@ namespace lothal {
 
 /** \class R2Lothal
  * \brief R2Lothal 是 SDK Lothal 对外的接口层，它提供了：
- * \li 基本参数设置及查询：比如 MIC 通道、采样率等
+ * \li 基本参数设置及查询：比如麦克风阵列通道、采样率等
  * \li pipeline 管理：启动、停止、暂停及恢复
  * \li 事件管理：注册事件回调，事件上报等
  * \li 业务 API：添加与删除激活词等
@@ -31,7 +31,7 @@ class R2Lothal {
 public:
 	/** \fn R2Lothal()
 	 * \brief R2Lothal 默认构造函数。实例化之后需要根据需要
-	 * 调用 API 设置正确的 MIC 通道及采样率等参数。
+	 * 调用 API 设置正确的麦克风阵列通道及采样率等参数。
 	 *
 	 * \note 默认 pipeline 中不包含任何处理模块，需要调用 API
 	 * addModule() 往 pipeline 中增加需要的处理模块。
@@ -39,7 +39,7 @@ public:
 	R2Lothal();
 	/** \fn R2Lothal(const std::string &config)
 	 * \brief R2Lothal 构造函数。配置文件已正确地配置好基本
-	 * 参数（比如 MIC 通道及采样率等）及 pipeline 中所包含的
+	 * 参数（比如麦克风阵列通道及采样率等）及 pipeline 中所包含的
 	 * 处理模块，不需要再重新 addModule()。
 	 * \param[in] config Lothal 配置文件路径，具体配置内容可参考
 	 * 用户配置手册。
@@ -60,46 +60,56 @@ public:
 
 	/** \fn int getParams(int &channel, R2BitFormat &format, int &rate)
 	 * \brief 查询基本参数信息
-	 * \param[out] channel 保存返回的 MIC 通道
-	 * \param[out] format 保存返回的数据格式
-	 * \param[out] rate 保存返回的采样率
+	 * \param[out] channel 保存返回的麦克风通道数。
+	 * \param[out] format 保存返回的数据格式。
+	 * \param[out] rate 保存返回的采样率。
 	 * \return 成功返回 \link R2_EOK \endlink，失败返回值小于0。
 	 */
 	int getParams(int &channel, R2BitFormat &format, int &rate);
 
 	/** \fn int setParams(int channel, R2BitFormat format, int rate)
 	 * \brief 设置基本参数信息
-	 * \param[in] channel MIC 通道数
-	 * \param[in] format 数据格式
-	 * \param[in] rate 采样率
+	 * \param[in] channel 麦克风通道数，比如 6+2 麦克风阵列时，该值为 8。
+	 * \param[in] format 数据格式，表示每次采样的数据 bit 位宽。
+	 * \param[in] rate 采样率，比如16000、48000等。
 	 * \return 成功返回 \link R2_EOK \endlink，失败返回值小于0。
-	 * \retval -R2_EWRONGARGS 输入参数有误
+	 * \retval -R2_EWRONGARGS 输入参数有误。
 	 */
 	int setParams(int channel, R2BitFormat format, int rate);
 
 	/** \fn int setMicShape(R2MicArrayShape shape)
-	 * \brief 设置 MIC 外形。
-	 * \param[in] shape MIC 外形，支持类型见 \link R2MicArrayShape \endlink。
+	 * \brief 设置麦克风阵列类型。
+	 * \param[in] shape 麦克风阵列类型，支持类型见 \link R2MicArrayShape \endlink。
 	 * \return 成功返回 \link R2_EOK \endlink，失败返回值小于0。
 	 * \retval -R2_EWRONGARGS 输入参数有误。
 	 */
 	int setMicShape(R2MicArrayShape shape);
 
 	/** \fn R2MicArrayShape getMicShape()
-	 * \brief 获取已设置的 MIC 外形。
-	 * \return 返回 MIC 外形。
+	 * \brief 获取已设置的麦克风阵列类型。
+	 * \return 返回麦克风阵列类型。
 	 */
 	R2MicArrayShape getMicShape();
 
+	/** \fn int setMicSize(int nch, float size)
+	 * \brief 设置麦克风阵列尺寸，将会用于更新各个麦克风位置坐标。
+	 * \param[in] nch 输入麦克风数，比如 6+2 麦克风阵列时，该值为 6。
+	 * \param[in] size 麦克风阵列半径尺寸，单位为 m。
+	 * \return 成功返回 \link R2_EOK \endlink，失败返回其他值。
+	 * \note 该接口目前只针对环型麦克风阵列有效，即必须是调用 setMicShape(R2_SHAPE_PLANE)。
+	 */
+	int setMicSize(int nch, float size);
+
 	/** \fn int getDataBlockSize()
-	 * \brief 获取数据块大小。process() 函数每次处理的数据长
-	 * 度必须为块大小。
+	 * \brief 获取数据块大小。process() 函数每次处理的数据长度必须为块大小。
+	 * 这个值是通过采样率、道通数、采样时长（20ms）及每次采样位宽计算得到，
+	 * 因此必须先调用 int setParams(int channel, R2BitFormat format, int rate)。
 	 * \return 返回获取的块字节数。
 	 */
 	int getDataBlockSize();
 
 	/** \fn int getMaxAngel()
-	 * \brief 获取设备最大角度。最大角度值与 MIC 外形有关，
+	 * \brief 获取设备最大角度。最大角度值与麦克风阵列类型有关，
 	 * 线麦为180度，环麦为360度。
 	 * \return 返回获取的最大角度。
 	 */
@@ -121,8 +131,8 @@ public:
 	 * \brief 从 pipeline 中移除该处理模块。
 	 * \param[in] name 待移除的模块名。
 	 * \return 执行成功返回 \link R2_EOK \endlink，失败返回值小于0。
-	 * \note 移除模块时，pipeline 必须先处于非工作状态，
-	 * 可以先调用 stopPipeline() 停止pipeline。
+	 * \note 移除模块时，pipeline 必须先处于非工作状态，可以先调用
+	 * stopPipeline() 停止 pipeline。
 	 */
 	int removeModule(const std::string &name);
 
@@ -155,7 +165,7 @@ public:
 	int stopPipeline();
 
 	/** \fn int pausePipeline()
-	 * \brief 暂停 pipeline 的运行，暂停语音数据的处理。但
+	 * \brief 暂停 pipeline 的运行，暂停语音数据的处理，但
 	 * 不释放每个模块分配的资源。
 	 * \return 成功返回 \link R2_EOK \endlink。
 	 */
@@ -192,6 +202,9 @@ public:
 	 * 调用 startPipeline() 启动 pipeline。
 	 * \retval -R2_EWRONGARGS 语音流在处理过程中出现了错误，导
 	 * 致数据信息不正确。
+	 * \note 部分芯片从麦克风阵列收到的音频数据与上述计算值有差异，
+	 * 比如为65535等，可能是由于其中包含了额外的数据信息，此时应以
+	 * 实际值为准。
 	 */
 	int process(const unsigned char* data, int size);
 
@@ -222,6 +235,9 @@ public:
 	void removeEventHandler(const std::string &name,
 			R2EventHandlerSp handler);
 
+    int setVtWords(const std::string &content, const std::string &pinyin,
+            int type, int idx, bool cloud_confirm);
+
 	/** \fn int addWord(const std::string &content, const std::string &pinyin, int type)
 	 * \brief 添加自定义激活词。
 	 * \param[in] content 激活词内容，比如"若琪"。
@@ -236,8 +252,8 @@ public:
 	 * \param[in] content 激活词内容，比如"若琪"。
 	 * \param[in] pinyin 激活词音，比如"ruoqi"。
 	 * \param[in] type 激活词类型，值为1。
-	 * \param[in] margin 激活词激活阈值，值越大表示对语音要求
-	 * 越高，也就越难激活，经验值范围是[-2.0, 2.0]。
+	 * \param[in] margin 激活词激活阈值，值越大表示对语音要求越高，
+	 * 也就越难激活，经验值范围是[-2.0, 2.0]。
 	 * \return 成功返回 \link R2_EOK \endlink，失败返回值小于0。
 	 */
 	int addWord(const std::string &content, const std::string &pinyin,

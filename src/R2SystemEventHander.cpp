@@ -112,17 +112,12 @@ int R2SystemEventHander::onEvent(R2Event &event) {
 	if (name == R2_EVENT_PICKUP) {
 		bool *s = (bool *)event.getArgs();
 		R2Log("<%s>: %d", name.c_str(), (*s));
-		client_.set_pickup(*s);
+		client_.handle_pickup(*s);
 		return R2_EOK;
 	}
 
 	if (name == R2_EVENT_DATA_OUT) {
 		R2PutDataInfo *datainfo = (R2PutDataInfo *)event.getArgs();
-
-		if (client_.is_pickup() && !client_.isSpeaking()) {
-		    R2Log("start voice from pickup");
-		    client_.startVoice(NULL);
-        }
 
 		if (client_.isSpeaking()) {
 			R2Verbose("put voice: %p, len: %d",

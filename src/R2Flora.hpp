@@ -59,6 +59,7 @@ private:
 	void handleMute(std::shared_ptr<Caps> &msg);
 	void handleAddWord(std::shared_ptr<Caps> &msg);
 	void handleRemoveWord(std::shared_ptr<Caps> &msg);
+	void handleVtwords(std::shared_ptr<Caps> &msg);
 
 private:
 	R2Lothal &lothal_;

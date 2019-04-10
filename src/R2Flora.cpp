@@ -218,6 +218,9 @@ void R2Flora::initMsgHandlerMap() {
 	msg_handlers_.insert(make_pair("rokid.turen.removeVtWord",
 				      [this] (shared_ptr <Caps> &msg) {
 				      this->handleRemoveWord(msg);}));
+	msg_handlers_.insert(make_pair("rokid.turen.vtwords",
+				      [this] (shared_ptr <Caps> &msg) {
+				      this->handleVtwords(msg);}));
 }
 
 static bool caps_read_int32(shared_ptr<Caps> &caps, int32_t & r) {
@@ -323,6 +326,48 @@ void R2Flora::handleRemoveWord(shared_ptr<Caps> &msg) {
 	}
 
 	lothal_.removeWord(word);
+}
+
+void R2Flora::handleVtwords(shared_ptr<Caps> &msg) {
+    shared_ptr<Caps> sub;
+    string word;
+    string pinyin;
+    int32_t type;
+    float index = 5;
+    int32_t cloud_confirm = 0;
+
+    if (msg == nullptr)
+        goto invalid_msg;
+    if (msg->read(sub) != CAPS_SUCCESS) {
+        R2Log("failed sub");
+        goto invalid_msg;
+    }
+    if (sub->read(word) != CAPS_SUCCESS) {
+        R2Log("failed word");
+        goto invalid_msg;
+    }
+    if (sub->read(pinyin) != CAPS_SUCCESS) {
+        R2Log("failed py");
+        goto invalid_msg;
+    }
+    if (sub->read(type) != CAPS_SUCCESS) {
+        R2Log("failed type");
+        goto invalid_msg;
+    }
+    if (sub->read(index) != CAPS_SUCCESS) {
+        R2Log("failed index");
+        goto invalid_msg;
+    }
+    if (sub->read(cloud_confirm) != CAPS_SUCCESS) {
+        R2Log("failed cloud_confirm");
+        goto invalid_msg;
+    }
+
+    lothal_.setVtWords(word, pinyin, type, index, cloud_confirm);
+    return;
+
+invalid_msg:
+    R2Error("invalid  vtwords msg", word.c_str());
 }
 
 }
