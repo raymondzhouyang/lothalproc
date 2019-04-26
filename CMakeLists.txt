@@ -37,25 +37,23 @@ message("##### ${externalPrefix}")
 set(lib_name rokid)
 set(third_lib_name third-party)
 
-if (BUILD_TARGET MATCHES "android")
 set(common_libs
     lothal
     r2base
     opus
     )
-else()
+
+if (NOT BUILD_TARGET MATCHES "android")
 set(common_libs
-    lothal
-    r2base
-    opus
+    ${common_libs}
     fftw3f
     )
 endif()
 
-
 set(common_include_paths
     include
     include/r2base
+    include/lothal
     )
 
 set(common_headers
@@ -72,6 +70,7 @@ findPackage(common REQUIRED
 include_directories(
     ${externalPrefix}/include
     ${externalPrefix}/include/r2base
+    ${externalPrefix}/include/lothal
 )
 
 if(HAVE_FLORA)
@@ -97,10 +96,9 @@ else()
     set(speech_headers
         speech.h
     )
-
 endif(HAVE_FLORA)
 
-message("### ")
+message("### find speech or flora")
 findPackage(speech REQUIRED
     HINTS ${externalPrefix}
     INC_PATH_SUFFIX ${speech_include_paths}
@@ -163,7 +161,6 @@ target_include_directories(lothalproc PRIVATE
     ${common_INCLUDE_DIRS}
     ${speech_INCLUDE_DIRS}
     ${micarray_INCLUDE_DIRS}
-    include
 )
 
 target_link_libraries(lothalproc

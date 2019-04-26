@@ -45,7 +45,7 @@ do
     esac
 
     case $conf_opt in
-        --help)
+    --help)
         print_prompt
         exit 0
         ;;
