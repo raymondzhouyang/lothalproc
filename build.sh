@@ -34,6 +34,21 @@ info "R2_BUILD_TOOL_DIR=${R2_BUILD_TOOL_DIR}"
 info "R2_EXTERNAL_DIR=${R2_EXTERNAL_DIR}"
 info "R2_CMAKE_MODULES_DIR=${R2_CMAKE_MODULES_DIR}"
 
+if [ ! -d ${R2_BUILD_TOOL_DIR} ]; then
+    error "Cannot find the build tools directory ${R2_BUILD_TOOL_DIR}"
+    exit 1
+fi
+
+if [ ! -d ${R2_EXTERNAL_DIR} ]; then
+    error "Cannot find the build tools directory ${R2_EXTERNAL_DIR}"
+    exit 1
+fi
+
+if [ ! -d ${R2_CMAKE_MODULES_DIR} ]; then
+    error "Cannot find the build tools directory ${R2_CMAKE_MODULES_DIR}"
+    exit 1
+fi
+
 export NDK="${R2_BUILD_TOOL_DIR}/android-ndk-r15c"
 a113ToolChain=${R2_BUILD_TOOL_DIR}/toolchain/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu
 k18ToolChain=${R2_BUILD_TOOL_DIR}/toolchain/toolchain-arm_cortex-a7+neon_gcc-5.3.0_glibc-2.22_eabi
@@ -84,7 +99,6 @@ elif [ "${BUILD_TARGET}" = "android" ]; then
         --android-api-level=20         \
         --android-toolchain-name=clang \
         --android-stl=c++_static"
-
 elif [ "${BUILD_TARGET}" = "k18" ]; then
     ARCH=arm32
     export STAGING_DIR=${BUILD_DIR}/STAGING_DIR
@@ -101,12 +115,6 @@ else
     exit 1
 fi
 
-if [ ! -d ${R2_BUILD_TOOL_DIR} ]; then
-    error "Cannot find the build tools directory ${R2_BUILD_TOOL_DIR}"
-    error "Read README.md to get help."
-    exit 1
-fi
-
 info "Clean ${BUILD_DIR}"
 rm -rf ${BUILD_DIR}
 
@@ -114,11 +122,15 @@ info "Show config options:"
 info "${CONFIG_OPTS}"
 ./config.sh ${CONFIG_OPTS} --other="${FEATURES}"
 if [ $? -ne 0 ]; then
-    error "Failed to config, exit now."
+    error "Failed to config lothalproc, exit now."
     exit 1
 fi
 
 cd ${BUILD_DIR}
 make ARCH=${ARCH} -j4 V=1 && make install
+if [ $? -ne 0 ]; then
+    error "Failed to build lothalproc, exit now."
+    exit 1
+fi
 cd ${PROJECT_DIR}
 
