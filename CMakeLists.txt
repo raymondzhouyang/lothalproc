@@ -14,6 +14,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 message("CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}")
 
+execute_process(COMMAND git describe --match=NeVeRmAtCh --always --abbrev=40 --dirty
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_SHA1
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 add_definitions(-DCOMMIT="${GIT_SHA1}")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

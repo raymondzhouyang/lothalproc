@@ -80,9 +80,7 @@ CONFIG_OPTS="--cmake-modules=${R2_CMAKE_MODULES_DIR}   \
     --debug=${BUILD_DEBUG} 
 "
 
-GIT_SHA1=`git describe --match=NeVeRmAtCh --always --abbrev=40 --dirty`
-# GIT_SHA1=`git describe --always --abbrev=40 --dirty`
-FEATURES="-DHAVE_FLORA=1 -DHAVE_MIC_ARRAY=1 -DGIT_SHA1=${GIT_SHA1}"
+FEATURES="-DHAVE_FLORA=1 -DHAVE_MIC_ARRAY=1"
 
 if [ "${BUILD_TARGET}" = "a113" ]; then
     ARCH=arm64
