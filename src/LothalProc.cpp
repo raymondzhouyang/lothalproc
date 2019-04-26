@@ -62,7 +62,8 @@ int LothalProc::run() {
 	lothal_->startPipeline();
 	block_size = lothal_->getDataBlockSize();
 	while (!r2_exit() && !exit_) {
-		if (!lothal_->isReady()) {
+		/* Keep reading audio data when in record mode. */
+		if (!lothal_->isReady() && !record_mode_) {
 			usleep(2000);
 			continue;
 		}
@@ -108,6 +109,10 @@ void LothalProc::process() {
 			lothal_->process(data->data, data->size);
 		queue_.deleteFrame(frame);
 	}
+}
+
+void LothalProc::setRecordMode(bool flag) {
+	record_mode_ = flag;
 }
 
 void LothalProc::setProvider(DataProvider *provider) {

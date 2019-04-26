@@ -15,6 +15,7 @@ public:
 	~LothalProc();
 
 public:
+	void setRecordMode(bool flag);
 	void setProvider(DataProvider *provider);
 	int run();
 public:
@@ -27,6 +28,7 @@ private:
 	volatile bool exit_ = false;
 	volatile bool running_ = false;
 	pthread_t proc_thread_;
+	bool record_mode_ = false;
 };
 }
 

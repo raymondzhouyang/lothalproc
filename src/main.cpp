@@ -49,6 +49,7 @@ static struct option long_opts[] = {
 	{"base-port", required_argument, 0, 4},
 	{"provider-port", required_argument, 0, 2},
 	{"log-server", required_argument, 0, 1},
+	{"record-mode", no_argument, 0, 5},
 #ifdef HAVE_FLORA
 	{"flora-uri", required_argument, 0, 3}
 #endif
@@ -77,6 +78,7 @@ void show_help() {
 	printf("  --provider-port=PORT Set the socket provider port. Use this port when \"--type=socket\".\n"
 		"                       is set. Default is %d.\n", PROVIDER_PORT);
 	printf("  --log-server=PORT    Set log server port. Default is %d.\n", LOG_SERVER_PORT);
+	printf("  --record-mode        Enable record mode. Keep reading audio data when is mute.\n");
 #ifdef HAVE_FLORA
 	printf("  --flora-uri=URI      Set set flora uri. Default is %s.\n", FLORA_URI);
 #endif
@@ -104,6 +106,7 @@ int main(int argc, char* argv[]) {
 	R2Client *client = NULL;
 	R2EventExecutor *executor = NULL;
 	int log_port = LOG_SERVER_PORT;
+	bool record = false;
 #ifdef HAVE_FLORA
 	string flora_uri = FLORA_URI;
 #endif
@@ -138,6 +141,9 @@ int main(int argc, char* argv[]) {
 #endif
 		case 4:
 			base_port = atoi(optarg);
+			break;
+		case 5:
+			record = true;
 			break;
 		case 'v':
 			show_version();
@@ -195,6 +201,7 @@ int main(int argc, char* argv[]) {
 		R2Error("Failed to create LothalProc.");
 		goto _finish;
 	}
+	lothalproc->setRecordMode(record);
 	lothalproc->setProvider(provider);
 
 #ifdef HAVE_FLORA
