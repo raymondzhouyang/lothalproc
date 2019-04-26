@@ -31,8 +31,8 @@
 using namespace std;
 using namespace lothal;
 
-#define PROVIDER_PORT		(R2_BASEPORT)
-#define LOG_SERVER_PORT		(R2_BASEPORT + 100)
+#define PROVIDER_PORT		(R2Lothal::getBasePort())
+#define LOG_SERVER_PORT		(R2Lothal::getBasePort() + 100)
 #define LOTHAL_CONFIG		"/system/workdir_asr_cn/lothal.ini"
 #define FLORA_URI		"unix:/var/run/flora.sock"
 
@@ -46,6 +46,7 @@ static struct option long_opts[] = {
 	{"config", required_argument, 0, 'c'},
 	{"provider", required_argument, 0, 'p'},
 	{"type", required_argument, 0, 'T'},
+	{"base-port", required_argument, 0, 4},
 	{"provider-port", required_argument, 0, 2},
 	{"log-server", required_argument, 0, 1},
 #ifdef HAVE_FLORA
@@ -70,6 +71,9 @@ void show_help() {
 		"                       Default is \"mic\".\n");
 	printf("  -p, --provider=FILE  The .wav file path when use file as provider. Use this when\n"
 		"                       \"--type=file\" is set.\n");
+	printf("  --base-port=PORT     Set the base port for socket. This would be useful if there're more than\n"
+		"                       one process running on the same system. This keeps them use different ports.\n"
+		"                       Default is %d.\n", PROVIDER_PORT);
 	printf("  --provider-port=PORT Set the socket provider port. Use this port when \"--type=socket\".\n"
 		"                       is set. Default is %d.\n", PROVIDER_PORT);
 	printf("  --log-server=PORT    Set log server port. Default is %d.\n", LOG_SERVER_PORT);
@@ -95,6 +99,7 @@ int main(int argc, char* argv[]) {
 	R2Lothal* lothal = NULL;
 	LothalProc* lothalproc = NULL;
 	DataProvider* provider = NULL;
+	int base_port = PROVIDER_PORT;
 	int provider_port = PROVIDER_PORT;
 	R2Client *client = NULL;
 	R2EventExecutor *executor = NULL;
@@ -131,6 +136,9 @@ int main(int argc, char* argv[]) {
 			flora_uri = optarg;
 			break;
 #endif
+		case 4:
+			base_port = atoi(optarg);
+			break;
 		case 'v':
 			show_version();
 		case 'h':
@@ -140,6 +148,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
+	R2Lothal::setBasePort(base_port);
 	R2Log::setLogServer(log_port);
 
 	if (config.length() <= 0) {

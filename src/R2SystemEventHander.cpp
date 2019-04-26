@@ -19,7 +19,7 @@ namespace lothal {
 
 R2SystemEventHander::R2SystemEventHander(R2Lothal &lothal, R2Client &client):
 		lothal_(lothal), client_(client) {
-	voip_outserver_ = R2_NEW(R2ProcServer, R2_BASEPORT+17,
+	voip_outserver_ = R2_NEW(R2ProcServer, lothal.getBasePort() + 17,
                             "voip(read)", lothal_);
 	isconnected_ = false;
 }

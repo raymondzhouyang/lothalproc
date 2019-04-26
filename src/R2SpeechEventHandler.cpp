@@ -25,10 +25,10 @@ namespace lothal {
 
 R2SpeechEventHandler::R2SpeechEventHandler(R2Lothal &lothal, R2Speech &speech):
 		lothal_(lothal), speech_(speech) {
-	event_server_ = R2_NEW(R2OutServer, R2_BASEPORT + 200, "EventServer");
+	event_server_ = R2_NEW(R2OutServer, lothal.getBasePort() + 200, "EventServer");
 	event_server_->startServer();
 
-	awake_server_ = R2_NEW(R2OutServer, R2_BASEPORT + 201, "AwakeServer");
+	awake_server_ = R2_NEW(R2OutServer, lothal.getBasePort() + 201, "AwakeServer");
 	awake_server_->startServer();
 }
 
