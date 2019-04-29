@@ -1,2 +1,2 @@
 # lothalproc
-Rokid ai audio SDK demo
+Rokid ai audio SDK demo.
