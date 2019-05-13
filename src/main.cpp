@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
 #ifdef HAVE_FLORA
 	client = R2_NEW(R2Flora, *lothal, flora_uri);
 #else
-	client = R2_NEW(R2Speech, *lothal, lothal->isModuleEnabled("OPUS"));
+	client = R2_NEW(R2Speech, *lothal, lothal->isModuleEnabled("OPUS") || lothal->isModuleEnabled("HDOPUS"));
 #endif
 	if (!client) {
 		R2Error("Failed to create client.");

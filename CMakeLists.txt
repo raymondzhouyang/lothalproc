@@ -45,13 +45,19 @@ set(third_lib_name third-party)
 set(common_libs
     lothal
     r2base
-    opus
     )
 
 if (NOT BUILD_TARGET MATCHES "android")
 set(common_libs
     ${common_libs}
     fftw3f
+    )
+endif()
+
+if (NOT BUILD_TARGET MATCHES "k18")
+set(common_libs
+    ${common_libs}
+    opus
     )
 endif()
 
