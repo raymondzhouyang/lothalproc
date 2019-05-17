@@ -26,6 +26,8 @@
 #include "R2Speech.hpp"
 #endif
 #include "R2EventExecutor.hpp"
+#include "R2Stream.hpp"
+#include "R2RPCServer.hpp"
 #include "LothalProc.hpp"
 
 using namespace std;
@@ -105,6 +107,7 @@ int main(int argc, char* argv[]) {
 	int provider_port = PROVIDER_PORT;
 	R2Client *client = NULL;
 	R2EventExecutor *executor = NULL;
+	r2base::R2Server* rpc_server = NULL;
 	int log_port = LOG_SERVER_PORT;
 	bool record = false;
 #ifdef HAVE_FLORA
@@ -220,9 +223,16 @@ int main(int argc, char* argv[]) {
 		goto _finish;
 	}
 
+	rpc_server = R2_NEW(R2RPCServer, *lothal, lothal->getBasePort() + 300);
+	if (NULL == rpc_server) {
+		R2Error("Failed to start RPC.");
+		goto _finish;
+	}
+
 	lothalproc->run();
 
 _finish:
+	R2_DEL(rpc_server);
 	R2_DEL(executor);
 	R2_DEL(lothalproc);
 	R2_DEL(client);
