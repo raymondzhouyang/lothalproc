@@ -119,14 +119,7 @@ if(HAVE_MIC_ARRAY)
         include/micarray/include
     )
 
-    if(BUILD_TARGET STREQUAL a113)
-        set(micarray_libs
-            android_hardware android_cutils
-        )
-        set(micarray_headers
-            hardware/mic_array.h
-        )
-    elseif(BUILD_TARGET STREQUAL k18)
+    if(BUILD_TARGET STREQUAL k18)
         set(micarray_libs
             property mic_array.default android_hardware android_cutils
         )
@@ -141,6 +134,13 @@ if(HAVE_MIC_ARRAY)
         )
         set(micarray_libs
             hardware
+        )
+    else()
+        set(micarray_libs
+            android_hardware android_cutils
+        )
+        set(micarray_headers
+            hardware/mic_array.h
         )
     endif()
 
